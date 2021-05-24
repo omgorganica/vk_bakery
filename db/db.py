@@ -13,10 +13,8 @@ engine = create_engine(f'postgresql+psycopg2://{DB_USER}:{DB_PASSWORD}@{HOST}/{D
 
 
 def connect(user, password, db):
-    '''Returns a connection and a metadata object'''
     url = f'postgresql+psycopg2://{user}:{password}@localhost/{db}'
     con = sqlalchemy.create_engine(url, client_encoding='utf8')
-    # We then bind the connection to MetaData()
     meta = sqlalchemy.MetaData(bind=con)
 
     return con, meta
