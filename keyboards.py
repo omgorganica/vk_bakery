@@ -7,8 +7,6 @@ def initial_keyboard():
     data = get_categories()
 
     for element in data:
-        payload = {"category":element.id}
-        keyboard.add_callback_button(element.name,color=VkKeyboardColor.PRIMARY,payload=payload)
+        payload = {"category": element['id']}
+        keyboard.add_button(element['name'], color=VkKeyboardColor.PRIMARY, payload=payload)
     return keyboard.get_keyboard()
-
-

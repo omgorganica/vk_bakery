@@ -8,8 +8,11 @@ session = Session()
 
 
 def get_categories() -> List:
+    cat_list = []
     categories = session.query(Category).all()
-    cat_list = {cat.id:cat.name for cat in categories}
+    for cat in categories:
+        new_item = {"id":cat.id,"name":cat.name}
+        cat_list.append(new_item)
     return cat_list
 
 

@@ -3,3 +3,6 @@ import vk_api.vk_api
 from vk_api.bot_longpoll import VkBotLongPoll
 from vk_api.bot_longpoll import VkBotEventType
 
+data = get_categories()
+for el in data:
+    print(el['id'])

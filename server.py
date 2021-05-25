@@ -49,4 +49,4 @@ class Server:
         return self.vk_api.users.get(user_id=user_id, fields="city")[0]["city"]['title']
 
     def send_message(self, peer_id, message, keyboard=None):
-        self.vk_api.messages.send(peer_id=peer_id, message=message, random_id=random())
+        self.vk_api.messages.send(peer_id=peer_id, message=message, random_id=random(),keyboard=keyboard)
