@@ -2,7 +2,9 @@ import vk_api.vk_api
 from random import random
 from vk_api.bot_longpoll import VkBotLongPoll
 from vk_api.bot_longpoll import VkBotEventType
-from keyboards import initial_keyboard
+from keyboards import category_keyboard, goods_keyboard, back_keyboard
+from db_commands import get_element
+
 
 class Server:
 
@@ -34,12 +36,6 @@ class Server:
         # Посылаем сообщение пользователю с указанным ID
         self.send_msg(50113631, "Привет-привет!")
 
-    def start(self):
-        for event in self.long_poll.listen():
-            if event.type == VkBotEventType.MESSAGE_NEW:
-                print(event)
-                self.send_message(event.object.peer_id,"я получил ваше сообщение!",keyboard=initial_keyboard())
-
     def get_user_name(self, user_id):
         """ Получаем имя пользователя"""
         return self.vk_api.users.get(user_id=user_id)[0]['first_name']
@@ -49,4 +45,31 @@ class Server:
         return self.vk_api.users.get(user_id=user_id, fields="city")[0]["city"]['title']
 
     def send_message(self, peer_id, message, keyboard=None):
-        self.vk_api.messages.send(peer_id=peer_id, message=message, random_id=random(),keyboard=keyboard)
+        self.vk_api.messages.send(peer_id=peer_id, message=message, random_id=random(), keyboard=keyboard)
+
+    def start(self):
+        for event in self.long_poll.listen():
+            if event.type == VkBotEventType.MESSAGE_NEW:
+                username = self.get_user_name(event.object.from_id)
+                print(event)
+
+                self.send_message(event.object.peer_id,
+                                  f"Приветствую,{username}.Вкусняшек какого стиля тебе хочется?",
+                                  keyboard=category_keyboard())
+
+            if event.type == VkBotEventType.MESSAGE_EVENT:
+                print(event)
+                if event.object.payload.get('type') == 'go_to_goods':
+                    category_id = event.object.payload.get('category_id')
+                    self.send_message(event.object.peer_id,
+                                      "У нас есть много всего,выбирай",
+                                      keyboard=goods_keyboard(category_id))
+
+                if event.object.payload.get('type') == 'go_to_element':
+                    element_id = event.object.payload.get('element_id')
+                    element = get_element(element_id)
+                    text = f"Вкусняшка:{element['name']} \n" \
+                           f"Описание:{element['description']}"
+                    self.send_message(event.object.peer_id,
+                                      text,
+                                      keyboard=back_keyboard())
