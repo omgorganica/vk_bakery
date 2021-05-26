@@ -33,6 +33,7 @@ def get_element(element_id) -> Dict:
     element['name'] = goods.name
     element['description'] = goods.description
     element['image'] = goods.image
+    element['category'] = goods.category_id
 
     return element
 

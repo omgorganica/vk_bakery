@@ -24,10 +24,17 @@ def goods_keyboard(category_id):
                                      payload={"type": "go_to_element", "element_id": element['id']})
         if index < len(data):
             keyboard.add_line()
-    keyboard.add_button('Назад', color=VkKeyboardColor.NEGATIVE)
+    keyboard.add_callback_button('Назад', color=VkKeyboardColor.NEGATIVE,
+                                 payload={"type": "go_to_categories"})
     return keyboard.get_keyboard()
 
 
+def element_keyboard(category_id):
+    keyboard = VkKeyboard(inline=True)
+    keyboard.add_callback_button('Назад', color=VkKeyboardColor.NEGATIVE,
+                                 payload={"type": "go_to_goods", "category_id": category_id,"back":True}
+                                 )
+    return keyboard.get_keyboard()
 
 
 
